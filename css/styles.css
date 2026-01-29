@@ -254,22 +254,9 @@ button:hover{
   max-width:700px;
   text-align:left;
 }
-
-function guardarNombre(){
-  const nombre = document.getElementById("studentName").value.trim();
-
-  if(nombre === ""){
-    alert("Por favor ingresa tu nombre");
-    event.preventDefault();
-    return;
-  }
-
-  localStorage.setItem("estudiante", nombre);
-}
-
-
 .resultado{
   font-weight:bold;
   font-size:18px;
   margin:10px 0;
+
 }
