@@ -42,25 +42,30 @@ const sesiones = {
   ]
 };
 
-// ================= CREAR QUIZZES =================
+// ================= CREAR QUIZ =================
 function crearQuiz(id) {
   let html = "";
 
-  sesiones[id].forEach((p, i) => {
-    html += `<p>${p.q}</p>`;
-    p.o.forEach(op => {
+  for (let i = 0; i < sesiones[id].length; i++) {
+    html += `<p>${sesiones[id][i].q}</p>`;
+
+    for (let j = 0; j < sesiones[id][i].o.length; j++) {
       html += `
         <label>
-          <input type="radio" name="${id}${i}" value="${op}">
-          ${op}
+          <input type="radio" name="${id}${i}" value="${sesiones[id][i].o[j]}">
+          ${sesiones[id][i].o[j]}
         </label><br>`;
-    });
-  });
+    }
+  }
 
   document.getElementById(id).innerHTML = html;
 }
 
-["quiz1", "quiz2", "quiz3", "quiz4"].forEach(crearQuiz);
+// Crear quizzes
+crearQuiz("quiz1");
+crearQuiz("quiz2");
+crearQuiz("quiz3");
+crearQuiz("quiz4");
 
 // ================= REVISAR CLASE =================
 function revisarClase(quizId, resId) {
@@ -219,3 +224,4 @@ document.querySelectorAll(".session-btn").forEach(btn => {
 
 // Mostrar primera sesión
 document.getElementById("s1").style.display = "block";
+
