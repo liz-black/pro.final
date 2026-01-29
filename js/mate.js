@@ -1,19 +1,17 @@
 // ================= SESIÓN DEL ESTUDIANTE =================
 const nombreEstudiante = localStorage.getItem("estudiante");
 
-// Seguridad: si no hay nombre, volver al inicio
+// Si no hay nombre, vuelve al inicio
 if (!nombreEstudiante) {
   alert("Debes ingresar tu nombre para acceder al curso");
-  window.location.href = "index.html";
+  location.href = "index.html";
 }
 
-// Mostrar nombre
-window.addEventListener("DOMContentLoaded", () => {
-  const titulo = document.getElementById("bienvenida");
-  if (titulo) {
-    titulo.innerText = `Bienvenido/a, ${nombreEstudiante}`;
-  }
-});
+// Mostrar bienvenida
+window.onload = () => {
+  document.getElementById("bienvenida").innerText =
+    `Bienvenido/a, ${nombreEstudiante}`;
+};
 
 // ================= FUNCIONES ÚTILES =================
 function rand(min, max) {
@@ -47,8 +45,9 @@ const sesiones = {
 // ================= CREAR QUIZZES =================
 function crearQuiz(id) {
   let html = "";
+
   sesiones[id].forEach((p, i) => {
-    html += `<div class="quiz"><p>${p.q}</p>`;
+    html += `<p>${p.q}</p>`;
     p.o.forEach(op => {
       html += `
         <label>
@@ -56,8 +55,8 @@ function crearQuiz(id) {
           ${op}
         </label><br>`;
     });
-    html += `</div>`;
   });
+
   document.getElementById(id).innerHTML = html;
 }
 
@@ -66,11 +65,12 @@ function crearQuiz(id) {
 // ================= REVISAR CLASE =================
 function revisarClase(quizId, resId) {
   let correctas = 0;
+
   sesiones[quizId].forEach((p, i) => {
-    const sel = document.querySelector(
+    let r = document.querySelector(
       `input[name="${quizId}${i}"]:checked`
     );
-    if (sel && sel.value === p.a) correctas++;
+    if (r && r.value === p.a) correctas++;
   });
 
   document.getElementById(resId).innerText =
@@ -82,40 +82,43 @@ function generarPreguntaRandom() {
   let tipo = rand(1, 4);
   let a, b, correcta, pregunta;
 
-  switch (tipo) {
-    case 1:
-      a = rand(1, 10);
-      b = rand(1, 10);
-      correcta = a + b;
-      pregunta = `¿Cuánto es ${a} + ${b}?`;
-      break;
-    case 2:
-      a = rand(5, 20);
-      b = rand(1, 10);
-      correcta = a - b;
-      pregunta = `¿Cuánto es ${a} − ${b}?`;
-      break;
-    case 3:
-      a = rand(1, 10);
-      b = rand(1, 10);
-      correcta = a * b;
-      pregunta = `¿Cuánto es ${a} × ${b}?`;
-      break;
-    case 4:
-      b = rand(1, 10);
-      correcta = rand(1, 10);
-      a = correcta * b;
-      pregunta = `¿Cuánto es ${a} ÷ ${b}?`;
-      break;
+  // 👉 SUMA
+  if (tipo === 1) {
+    a = rand(1, 10);
+    b = rand(1, 10);
+    correcta = a + b;
+    pregunta = `¿Cuánto es ${a} + ${b}?`;
   }
 
-  let opciones = mezclar([
-    correcta,
-    correcta + rand(1, 3),
-    correcta - rand(1, 3)
-  ]);
+  // 👉 RESTA
+  if (tipo === 2) {
+    a = rand(5, 20);
+    b = rand(1, 10);
+    correcta = a - b;
+    pregunta = `¿Cuánto es ${a} − ${b}?`;
+  }
 
-  return { q: pregunta, o: opciones, a: correcta };
+  // 👉 MULTIPLICACIÓN
+  if (tipo === 3) {
+    a = rand(1, 10);
+    b = rand(1, 10);
+    correcta = a * b;
+    pregunta = `¿Cuánto es ${a} × ${b}?`;
+  }
+
+  // 👉 DIVISIÓN EXACTA
+  if (tipo === 4) {
+    b = rand(1, 10);
+    correcta = rand(1, 10);
+    a = correcta * b;
+    pregunta = `¿Cuánto es ${a} ÷ ${b}?`;
+  }
+
+  return {
+    q: pregunta,
+    o: mezclar([correcta, correcta + 1, correcta - 1]),
+    a: correcta
+  };
 }
 
 // ================= BANCO FINAL =================
@@ -127,8 +130,9 @@ for (let i = 0; i < 10; i++) {
 // ================= MOSTRAR EVALUACIÓN FINAL =================
 function crearEvaluacionFinal() {
   let html = "";
+
   bancoFinal.forEach((p, i) => {
-    html += `<div class="quiz"><p>${p.q}</p>`;
+    html += `<p>${p.q}</p>`;
     p.o.forEach(op => {
       html += `
         <label>
@@ -136,8 +140,8 @@ function crearEvaluacionFinal() {
           ${op}
         </label><br>`;
     });
-    html += `</div>`;
   });
+
   document.getElementById("finalQuiz").innerHTML = html;
 }
 crearEvaluacionFinal();
@@ -145,9 +149,10 @@ crearEvaluacionFinal();
 // ================= CALCULAR NOTA =================
 function calcularFinal() {
   let nota = 0;
+
   bancoFinal.forEach((p, i) => {
-    const sel = document.querySelector(`input[name="f${i}"]:checked`);
-    if (sel && Number(sel.value) === p.a) nota += 2;
+    let r = document.querySelector(`input[name="f${i}"]:checked`);
+    if (r && Number(r.value) === p.a) nota += 2;
   });
 
   document.getElementById("notaFinal").innerText =
@@ -155,6 +160,7 @@ function calcularFinal() {
 }
 
 // ================= PDF =================
+// 
 function descargarEvaluacion() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -199,6 +205,7 @@ function descargarEvaluacion() {
 
   doc.save(`evaluacion_matematica_${nombreEstudiante}.pdf`);
 }
+
 
 // ================= NAVEGACIÓN =================
 document.querySelectorAll(".session-btn").forEach(btn => {
