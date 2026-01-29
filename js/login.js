@@ -8,6 +8,6 @@ function guardarNombre(){
 
   localStorage.setItem("estudiante", nombre);
 
-  // 👉 va a cursos, NO a compu
   window.location.href = "cursos.html";
 }
+
