@@ -15,6 +15,14 @@ nav{
   z-index:10;
 }
 
+.nav-btn{
+  color:#FFFFFF;
+  text-decoration:none;
+  font-weight:600;
+  font-size:16px;
+  padding:8px 12px;
+}
+
 .container{
   max-width:1000px;
   margin:auto;
@@ -120,3 +128,4 @@ video{
     font-size:1.8rem;
   }
 }
+
